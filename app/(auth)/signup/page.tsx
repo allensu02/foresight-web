@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useCreateUserWithEmailAndPassword, useSignInWithGoogle } from 'react-firebase-hooks/auth';
 import { auth } from '../../../firebase';
 import { useRouter } from 'next/navigation';
+import { updateProfile } from 'firebase/auth';
 
 export default function SignUp() {
   const [email, setEmail] = useState('');
@@ -22,12 +23,17 @@ export default function SignUp() {
     setIsLoading(true);
     try {
       const result = await createUserWithEmailAndPassword(email, password);
-      if (result) {
+      if (result && result.user) {
         console.log('Sign-up successful!', result.user);
         // Update user profile with account type
-        await result.user.updateProfile({
-          displayName: isBusinessSignup ? 'Business' : 'Individual'
-        });
+        try {
+          await updateProfile(result.user, {
+            displayName: isBusinessSignup ? 'Business' : 'Individual'
+          });
+          console.log('Profile updated successfully');
+        } catch (updateError) {
+          console.error('Error updating profile:', updateError);
+        }
         setShowAlert(true);
       }
     } catch (error) {

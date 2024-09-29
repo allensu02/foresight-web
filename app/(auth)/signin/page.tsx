@@ -6,6 +6,7 @@ import Image from 'next/image'; // Add this import
 import { useSignInWithEmailAndPassword } from 'react-firebase-hooks/auth';
 import { auth } from '../../../firebase';
 import { useRouter } from 'next/navigation';
+import { updateProfile } from 'firebase/auth'; // Add this import
 
 export default function SignIn() {
   const [email, setEmail] = useState('');
@@ -15,21 +16,30 @@ export default function SignIn() {
   const router = useRouter();
 
   const handleSignIn = async (e: React.FormEvent) => {
+    console.log("handle sign in")
     e.preventDefault();
     try {
       const result = await signInWithEmailAndPassword(email, password);
-      if (result) {
+      if (result && result.user) {
         console.log('Sign-in successful!', result.user);
         
         // Update user profile with account type
-        await result.user.updateProfile({
-          displayName: isBusinessLogin ? 'Business' : 'Individual'
-        });
+        try {
+          await updateProfile(result.user, {
+            displayName: isBusinessLogin ? 'Business' : 'Individual'
+          });
+          console.log('Profile updated successfully');
+        } catch (updateError) {
+          console.error('Error updating profile:', updateError);
+        }
 
         // Route based on account type
+        console.log('Before routing, isBusinessLogin:', isBusinessLogin);
         if (isBusinessLogin) {
+          console.log('Attempting to route to /business');
           router.push('/business');
         } else {
+          console.log('Attempting to route to /account');
           router.push('/account');
         }
       }
