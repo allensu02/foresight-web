@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 import { collection, addDoc } from "firebase/firestore";
 import { db } from "@/firebase";
 
@@ -131,6 +132,8 @@ const generalQuestions = [
 ];
 
 export default function AccountPage() {
+  const router = useRouter();
+
   const [sliderValues, setSliderValues] = useState(
     ethicalMetrics.flatMap((section) =>
       section.questions.map((q) => q.defaultValue)
@@ -168,6 +171,7 @@ export default function AccountPage() {
       console.error("Error submitting form:", error);
       alert("Error submitting form. Please try again.");
     }
+    router.push("/profile"); // Redirect to profile page
   };
 
   return (
