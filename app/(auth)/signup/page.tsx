@@ -9,6 +9,7 @@ export default function SignUp() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
+  const [isBusinessSignup, setIsBusinessSignup] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
@@ -23,6 +24,10 @@ export default function SignUp() {
       const result = await createUserWithEmailAndPassword(email, password);
       if (result) {
         console.log('Sign-up successful!', result.user);
+        // Update user profile with account type
+        await result.user.updateProfile({
+          displayName: isBusinessSignup ? 'Business' : 'Individual'
+        });
         setShowAlert(true);
       }
     } catch (error) {
@@ -43,6 +48,7 @@ export default function SignUp() {
       const result = await signInWithGoogle();
       if (result) {
         console.log('Signed in with Google successfully');
+        // You might want to add logic here to set the account type for Google sign-ins
       }
     } catch (error) {
       console.error('Error signing in with Google:', error);
@@ -78,17 +84,33 @@ export default function SignUp() {
         <h1 className="text-4xl font-bold">Create your account</h1>
       </div>
 
+      {/* Signup type toggle */}
+      <div className="mb-6 flex justify-center">
+        <button
+          className={`px-4 py-2 ${!isBusinessSignup ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
+          onClick={() => setIsBusinessSignup(false)}
+        >
+          Individual
+        </button>
+        <button
+          className={`px-4 py-2 ${isBusinessSignup ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
+          onClick={() => setIsBusinessSignup(true)}
+        >
+          Business
+        </button>
+      </div>
+
       <form onSubmit={handleSignUp}>
         <div className="space-y-4">
           <div>
             <label className="mb-1 block text-sm font-medium text-gray-700" htmlFor="name">
-              Full name
+              {isBusinessSignup ? 'Business Name' : 'Full Name'}
             </label>
             <input
               id="name"
               className="form-input w-full py-2"
               type="text"
-              placeholder="Corey Barker"
+              placeholder={isBusinessSignup ? 'Acme Inc.' : 'John Doe'}
               required
               value={name}
               onChange={(e) => setName(e.target.value)}

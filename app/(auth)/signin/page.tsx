@@ -10,6 +10,7 @@ import { useRouter } from 'next/navigation';
 export default function SignIn() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [isBusinessLogin, setIsBusinessLogin] = useState(false);
   const [signInWithEmailAndPassword, user, loading, error] = useSignInWithEmailAndPassword(auth);
   const router = useRouter();
 
@@ -19,7 +20,18 @@ export default function SignIn() {
       const result = await signInWithEmailAndPassword(email, password);
       if (result) {
         console.log('Sign-in successful!', result.user);
-        router.push('/account');
+        
+        // Update user profile with account type
+        await result.user.updateProfile({
+          displayName: isBusinessLogin ? 'Business' : 'Individual'
+        });
+
+        // Route based on account type
+        if (isBusinessLogin) {
+          router.push('/business');
+        } else {
+          router.push('/account');
+        }
       }
     } catch (error) {
       console.error('Error signing in:', error);
@@ -39,8 +51,26 @@ export default function SignIn() {
         />
       </div>
 
+      {/* Login type toggle */}
+      <div className="mb-6 flex justify-center">
+        <button
+          className={`px-4 py-2 ${!isBusinessLogin ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
+          onClick={() => setIsBusinessLogin(false)}
+        >
+          Individual
+        </button>
+        <button
+          className={`px-4 py-2 ${isBusinessLogin ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
+          onClick={() => setIsBusinessLogin(true)}
+        >
+          Business
+        </button>
+      </div>
+
       <div className="mb-10">
-        <h1 className="text-4xl font-bold">Sign in to your account</h1>
+        <h1 className="text-4xl font-bold">
+          Sign in to your {isBusinessLogin ? 'business' : 'individual'} account
+        </h1>
       </div>
       <form onSubmit={handleSignIn}>
         <div className="space-y-4">
