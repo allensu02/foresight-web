@@ -1,8 +1,9 @@
 "use client";
 
 import React from "react";
-
+import { useRouter } from 'next/navigation';
 // Section 1: Real-life metrics
+
 const section1 = [
   {
     id: 1,
@@ -41,10 +42,12 @@ const section2 = [
 ];
 
 export default function AccountPage() {
+  const router = useRouter();
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // Handle form submission logic here
     console.log("Form submitted");
+    router.push('/profile'); // Redirect to profile page
   };
 
   return (
