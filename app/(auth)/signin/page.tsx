@@ -30,13 +30,10 @@ export default function SignIn() {
     <>
       {/* Replace the video with your logo image */}
       <div className="mb-10">
-        <Image
-          src="/images/your-logo.png"
-          alt="Your Logo"
-          width={200} // Adjust this to your logo's width
-          height={100} // Adjust this to your logo's height
-          className="mx-auto" // Center the image
-        />
+      <img
+                src="./images/your-logo.png"
+                style={{ height: '50px' }} // Significantly smaller height // Center the image
+              />
       </div>
 
       <div className="mb-10">
