@@ -14,7 +14,10 @@ export default function AuthLayout({
           <div className="flex h-16 items-center justify-between md:h-20">
             {/* Site branding */}
             <div className="mr-4 shrink-0">
-              <Logo />
+            <img
+                src="./images/your-logo.png"
+                style={{ height: '50px' }} // Significantly smaller height // Center the image
+              />
             </div>
           </div>
         </div>
@@ -60,7 +63,7 @@ export default function AuthLayout({
               <div className="aspect-video w-full rounded-2xl bg-gray-900 px-5 py-3 shadow-xl transition duration-300">
                 <div className="relative mb-8 flex items-center justify-between before:block before:h-[9px] before:w-[41px] before:bg-[length:16px_9px] before:[background-image:radial-gradient(circle_at_4.5px_4.5px,_theme(colors.gray.600)_4.5px,_transparent_0)] after:w-[41px]">
                   <span className="text-[13px] font-medium text-white">
-                    cruip.com
+                    foresight.com
                   </span>
                 </div>
                 <div className="font-mono text-sm text-gray-500 transition duration-300 [&_span]:opacity-0">
@@ -68,23 +71,23 @@ export default function AuthLayout({
                     npm login
                   </span>{" "}
                   <span className="animate-[code-2_10s_infinite]">
-                    --registry=https://npm.pkg.github.com
+                    --registry=https://github.com/foresight
                   </span>
                   <br />
                   <span className="animate-[code-3_10s_infinite]">
-                    --scope=@phanatic
+                    foresight quiz
                   </span>{" "}
                   <span className="animate-[code-4_10s_infinite]">
-                    Successfully logged-in.
+                    checking company
                   </span>
                   <br />
                   <br />
                   <span className="animate-[code-5_10s_infinite] text-gray-200">
-                    npm publish
+                    data analysis
                   </span>
                   <br />
                   <span className="animate-[code-6_10s_infinite]">
-                    Package published.
+                    web scraping
                   </span>
                 </div>
               </div>
