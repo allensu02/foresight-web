@@ -4,12 +4,12 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { collection, addDoc } from "firebase/firestore";
 import { db } from "@/firebase";
+import toast, { Toaster } from "react-hot-toast"; // Import react-hot-toast
 
-// Ethical Metrics and new questions divided into sections
 const ethicalMetrics = [
   {
     category: "Human Rights",
-    color: "#007bff", // Blue
+    color: "#007bff",
     questions: [
       {
         id: 1,
@@ -30,7 +30,7 @@ const ethicalMetrics = [
   },
   {
     category: "Environmental Impact",
-    color: "#28a745", // Green
+    color: "#28a745",
     questions: [
       {
         id: 4,
@@ -51,7 +51,7 @@ const ethicalMetrics = [
   },
   {
     category: "Corporate Ethics",
-    color: "#ffc107", // Yellow
+    color: "#ffc107",
     questions: [
       {
         id: 7,
@@ -133,13 +133,11 @@ const generalQuestions = [
 
 export default function AccountPage() {
   const router = useRouter();
-
   const [sliderValues, setSliderValues] = useState(
     ethicalMetrics.flatMap((section) =>
       section.questions.map((q) => q.defaultValue)
     )
   );
-
   const [formData, setFormData] = useState<{ [key: string]: string }>({});
 
   const handleSliderChange = (index: number, value: number) => {
@@ -164,18 +162,38 @@ export default function AccountPage() {
     };
 
     try {
-      // Add data to Firestore
       const docRef = await addDoc(collection(db, "responses"), combinedData);
-      alert(`Form submitted successfully! Document ID: ${docRef.id}`);
+
+      // Custom styled toast
+      toast.custom(
+        <div className="bg-green-600 text-white p-6 rounded-lg shadow-lg text-center text-xl">
+          🎉 Form submitted successfully! 🎉
+        </div>,
+        {
+          duration: 1000,
+          position: "top-center",
+        }
+      );
+      setTimeout(() => {
+        router.push("/profile");
+      }, 2000);
     } catch (error) {
-      console.error("Error submitting form:", error);
-      alert("Error submitting form. Please try again.");
+      // Custom styled error toast
+      toast.custom(
+        <div className="bg-red-600 text-white p-6 rounded-lg shadow-lg text-center text-xl">
+          ❌ Error submitting form. Please try again.
+        </div>,
+        {
+          duration: 1000,
+          position: "top-center",
+        }
+      );
     }
-    router.push("/profile"); // Redirect to profile page
   };
 
   return (
     <div className="container mx-auto p-8 bg-gray-50 rounded-lg shadow-2xl max-w-4xl">
+      <Toaster position="top-center" reverseOrder={false} />
       <h1 className="text-4xl font-extrabold mb-6 text-center text-blue-700">
         User Quiz and Ethical Metric Survey
       </h1>
@@ -221,7 +239,6 @@ export default function AccountPage() {
                   {section.category}
                 </h2>
               </div>
-              {/* Map over the questions within each section */}
               {section.questions.map((question, questionIndex) => (
                 <div key={question.id} className="mb-8">
                   <p className="font-medium text-lg text-gray-700 mb-2">
